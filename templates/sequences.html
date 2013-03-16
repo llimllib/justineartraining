@@ -7,14 +7,22 @@
 var sequences = {{ sequences }}
 
 function evaluate_answer() {
-    var user_answer = $("input[name='answer']:checked").attr("value");
-    var correct_answer = JSON.parse($("source").attr("seq"));
+    var correct_answers = $("source").attr("sequence").split(",");
 
-    if (user_answer == correct_answer) {
-        $("#response").html("Yup!");
-    } else {
-        $("#response").html("Nope! Try again.");
-    }
+    $.each(correct_answers, function(idx, correct_answer) {
+        var user_answer = $("#chord" + idx).val();
+        var response_td = $("#response" + idx);
+
+        var response = "";
+
+        if (user_answer == correct_answer) {
+            response = '<span style="correct">&#10003;</span>';
+        } else {
+            response = '<span style="incorrect">&#215;</span>';
+        }
+
+        response_td.html(response);
+    });
 
     return false;
 }
@@ -33,7 +41,7 @@ function next_seq() {
     var sound_and_seq = sample(sequences);
     var sound_src = sound_and_seq[0];
     // JSON-encode the seq so we can stick it in an attr
-    var sound_seq  = JSON.stringify(sound_and_seq[1]);
+    var sound_seq  = sound_and_seq[1].join(",");
 
     var audio_html = '<audio id="player" controls="controls"><source sequence="'+sound_seq+'" src="'+sound_src+'" /></audio>';
     console.log(audio_html);
@@ -58,7 +66,7 @@ function all_possible_chords(seqs) {
 }
 
 function chord_options(possible_chords, n) {
-    var html = '<select name="chord'+n+'">\n';
+    var html = '<td><select id="chord'+n+'" name="chord'+n+'">\n';
 
     $.each(possible_chords, function(idx, val) {
         html += '<option value="'+val+'">'+val+'</option>';
@@ -74,12 +82,15 @@ $(function() {
     $("#nextseq").click(next_seq);
 
     var possible_chords = all_possible_chords(sequences);
-    var answerform_html = "";
+    var answerform_html = "<table><tr>";
+    var bottomrow = "<tr>";
 
     //assume every sequence is a 4-chord sequence for now
-    for (var i=4; i--; i>=0) {
+    for (var i=0; i<4; i++) {
         answerform_html += chord_options(possible_chords, i);
+        bottomrow += '<td id=response'+i+'></td>';
     }
+    answerform_html += "</tr>" + bottomrow + "</tr>"
     $("#answerform").prepend(answerform_html);
 
     next_seq();
@@ -91,7 +102,7 @@ $(function() {
     <div id="asound">
     </div>
     <div id="answers">
-        <form id="answerform">
+        <form id="answerform" action="#">
             <input type="submit" name="submit" value="Answer" id="answerbutton" />
         </form>
     </div>
