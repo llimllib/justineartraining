@@ -1,16 +1,36 @@
+from os import mkdir
 from pub import task
 from path import path
+from os.path import isdir
 from pystache import render
 from functools import partial
+from pub.shortcuts import rm
 
 @task
+def clean():
+    """Remove the lessons dir"""
+    rm("-rf lessons")
+
+@task("clean", default=True)
 def build():
-    render_lesson = partial(render, path("templates/lesson.html").text())
-    for lesson in path("lessons").dirs():
-        manifest = eval(lesson.files("lesson.py")[0].text())
+    if not isdir('lessons'): mkdir('lessons')
+    lessons = path("lessons")
 
-        n = lesson.partition('/')[-1]
+    render_ssr = partial(render, path("templates/ssr.html").text())
+    render_sequences = partial(render, path("templates/sequences.html").text())
 
-        output = render_lesson(manifest)
+    for lesson_src in path("lessons_src").dirs():
+        manifest = eval(lesson_src.files("lesson.py")[0].text())
 
-        open((lesson / "lesson{}.html".format(n)), "w").write(output)
+        n = lesson_src.partition('/')[-1]
+
+        outdir = lessons / n
+        outdir.mkdir()
+
+        if "sounds" in manifest:
+            output = render_ssr(manifest)
+            open((outdir / "ssr{}.html".format(n)), "w").write(output)
+
+        if "sequences" in manifest:
+            output = render_sequences(manifest)
+            open((outdir / "sequences{}.html".format(n)), "w").write(output)
