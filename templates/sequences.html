@@ -32,11 +32,11 @@ function sample(lst) {
 }
 
 function next_seq() {
-    //clear all radio buttons
-    $("input:radio").attr("checked", false);
+    //clear all select boxes
+    $("select").val("a");
 
     //clear the answer field
-    $("#response").html("");
+    $(".response").html("")
 
     var sound_and_seq = sample(sequences);
     var sound_src = sound_and_seq[0];
@@ -88,7 +88,7 @@ $(function() {
     //assume every sequence is a 4-chord sequence for now
     for (var i=0; i<4; i++) {
         answerform_html += chord_options(possible_chords, i);
-        bottomrow += '<td id=response'+i+'></td>';
+        bottomrow += '<td class="response" id="response'+i+'"></td>';
     }
     answerform_html += "</tr>" + bottomrow + "</tr>"
     $("#answerform").prepend(answerform_html);
