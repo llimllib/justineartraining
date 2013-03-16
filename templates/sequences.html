@@ -2,6 +2,23 @@
 <html>
 <head>
     <title>{{ title }}</title>
+</head>
+<body>
+<div id="quiz">
+    <div id="asound">
+    </div>
+    <div id="answers">
+        <form id="answerform" action="#">
+            <input type="submit" name="submit" value="Answer" id="answerbutton" />
+        </form>
+    </div>
+    <div id="response">
+    </div>
+    <div id="next">
+        <a href="#" id="nextseq">Give Me a New Chord Sequence</a>
+    </div>
+</div>
+</body>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script>
 var sequences = {{ sequences }}
@@ -96,21 +113,4 @@ $(function() {
     next_seq();
 });
     </script>
-</head>
-<body>
-<div id="quiz">
-    <div id="asound">
-    </div>
-    <div id="answers">
-        <form id="answerform" action="#">
-            <input type="submit" name="submit" value="Answer" id="answerbutton" />
-        </form>
-    </div>
-    <div id="response">
-    </div>
-    <div id="next">
-        <a href="#" id="nextseq">Give Me a New Chord Sequence</a>
-    </div>
-</div>
-</body>
 </html>
