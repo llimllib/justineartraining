@@ -4,11 +4,11 @@
     <title>{{ title }}</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script>
-var sounds = {{ sounds }}
+var sequences = {{ sequences }}
 
 function evaluate_answer() {
     var user_answer = $("input[name='answer']:checked").attr("value");
-    var correct_answer = $("source").attr("chord");
+    var correct_answer = JSON.parse($("source").attr("seq"));
 
     console.log(user_answer, correct_answer);
 
@@ -21,38 +21,70 @@ function evaluate_answer() {
     return false;
 }
 
-function next_chord() {
+function sample(lst) {
+    return lst[Math.floor(Math.random() * lst.length)];
+}
+
+function next_seq() {
     //clear all radio buttons
     $("input:radio").attr("checked", false);
 
     //clear the answer field
     $("#response").html("");
 
-    var random_idx = Math.floor(Math.random() * sounds.length);
+    var sound_and_seq = sample(sequences);
+    var sound_src = sound_and_seq[0];
+    // JSON-encode the seq so we can stick it in an attr
+    var sound_seq  = JSON.stringify(sound_and_seq[1]);
 
-    var sound_and_chord = sounds[random_idx];
-    var sound_src = sound_and_chord[0];
-    var sound_id  = sound_and_chord[1];
-
-    var audio_html = '<audio id="player" controls="controls"><source chord="'+sound_id+'" src="'+sound_src+'" /></audio>';
+    var audio_html = '<audio id="player" controls="controls"><source sequence="'+sound_seq+'" src="'+sound_src+'" /></audio>';
     console.log(audio_html);
     $("#asound").html(audio_html);
 }
 
-$(function() {
-    $("#answerbutton").click(evaluate_answer);
-    $("#nextchord").click(next_chord);
+//return all chords used anywhere in a sequence
+function all_possible_chords(seqs) {
+    var possible_chords = [];
 
-    $.each(sounds.reverse(), function (idx, val) {
-        var display_name = val[2];
-        var sound_id = val[1];
+    $.each(seqs, function (idx, val) {
+        var chords = val[1];
 
-        var option_html = '<input type="radio" name="answer" value="'+sound_id+'">'+display_name+'</input><br>'
-
-        $("#answerform").prepend(option_html);
+        $.each(chords, function(idx, chord) {
+            if (possible_chords.indexOf(chord) == -1) {
+                possible_chords.push(chord);
+            }
+        });
     });
 
-    next_chord();
+    return possible_chords;
+}
+
+function chord_options(possible_chords, n) {
+    var html = '<select name="chord'+n+'">\n';
+
+    $.each(possible_chords, function(idx, val) {
+        html += '<option value="'+val+'">'+val+'</option>';
+    });
+
+    html += '</select>';
+
+    return html
+}
+
+$(function() {
+    $("#answerbutton").click(evaluate_answer);
+    $("#nextseq").click(next_seq);
+
+    var possible_chords = all_possible_chords(sequences);
+    var answerform_html = "";
+
+    //assume every sequence is a 4-chord sequence for now
+    for (var i=4; i--; i>=0) {
+        answerform_html += chord_options(possible_chords, i);
+    }
+    $("#answerform").prepend(answerform_html);
+
+    next_seq();
 });
     </script>
 </head>
@@ -68,7 +100,7 @@ $(function() {
     <div id="response">
     </div>
     <div id="next">
-        <a href="#" id="nextchord">Give Me a New Chord</a>
+        <a href="#" id="nextseq">Give Me a New Chord Sequence</a>
     </div>
 </div>
 </body>
