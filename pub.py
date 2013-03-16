@@ -29,8 +29,12 @@ def build():
 
         if "sounds" in manifest:
             output = render_ssr(manifest)
+            for soundf, _, _ in manifest["sounds"]:
+                path(lesson_src / soundf).copy(outdir)
             open((outdir / "ssr{}.html".format(n)), "w").write(output)
 
         if "sequences" in manifest:
+            for seqf, _ in manifest["sequences"]:
+                path(lesson_src / seqf).copy(outdir)
             output = render_sequences(manifest)
             open((outdir / "sequences{}.html".format(n)), "w").write(output)
