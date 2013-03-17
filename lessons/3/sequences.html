@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>Lesson 2</title>
+    <title>Lesson 3</title>
     <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
     <style>
         body {
@@ -59,7 +59,7 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
     <script>
-var sequences = [['ameamdm.ogg', ['am', 'e', 'am', 'dm']], ['daame.ogg', ['d', 'a', 'am', 'e']], ['eddma.ogg', ['e', 'd', 'dm', 'a']]]
+var sequences = [['gcdc.ogg', ['g', 'c', 'd', 'c']], ['aede.ogg', ['a', 'e', 'd', 'e']], ['amcge.ogg', ['am', 'c', 'g', 'e']]]
 
 function evaluate_answer() {
     var correct_answers = $("source").attr("sequence").split(",");
@@ -101,7 +101,7 @@ function next_seq() {
     $("#asound").html(audio_html);
 }
 
-var chord_palette = [['a', 'A'], ['am', 'A minor'], ['d', 'D'], ['dm', 'D minor'], ['e', 'E'], ['em', 'E minor']];
+var chord_palette = [['a', 'A'], ['am', 'A minor'], ['d', 'D'], ['dm', 'D minor'], ['e', 'E'], ['em', 'E minor'], ['g', 'G'], ['c', 'C']];
 
 function chord_options(n) {
     var html = '<td><select id="chord'+n+'" name="chord'+n+'">\n';

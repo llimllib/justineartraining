@@ -1,0 +1,23 @@
+{
+'palette': [["a", "A"],
+            ["am", "A minor"],
+            ["d", "D"],
+            ["dm", "D minor"],
+            ["e", "E"],
+            ["em", "E minor"],
+            ["g", "G"],
+            ["c", "C"]],
+'ssr': [["a.ogg",  "a"],
+        ["am.ogg", "am"],
+        ["c.ogg",  "c"],
+        ["d.ogg",  "d"],
+        ["dm.ogg", "dm"],
+        ["e.ogg",  "e"],
+        ["g.ogg",  "g"]],
+'sequences': [["gcdc.ogg", ["g", "c", "d", "c"]],
+              ["aede.ogg", ["a", "e", "d", "e"]],
+              ["amcge.ogg", ["am", "c", "g", "e"]]],
+'quality': [["dm.ogg", "dm"],
+            ["d.ogg", "d"]],
+'title' : "Lesson 3"
+}
