@@ -9,7 +9,7 @@
             padding-bottom: 40px;
         }
         select {
-            width: 50px;
+            width: 90px;
         }
         .sidebar-nav {
             padding: 9px 0;
@@ -96,28 +96,15 @@ function next_seq() {
     $("#asound").html(audio_html);
 }
 
-//return all chords used anywhere in a sequence
-function all_possible_chords(seqs) {
-    var possible_chords = [];
+var chord_palette = {{ palette }};
 
-    $.each(seqs, function (idx, val) {
-        var chords = val[1];
-
-        $.each(chords, function(idx, chord) {
-            if (possible_chords.indexOf(chord) == -1) {
-                possible_chords.push(chord);
-            }
-        });
-    });
-
-    return possible_chords;
-}
-
-function chord_options(possible_chords, n) {
+function chord_options(n) {
     var html = '<td><select id="chord'+n+'" name="chord'+n+'">\n';
 
-    $.each(possible_chords, function(idx, val) {
-        html += '<option value="'+val+'">'+val+'</option>';
+    $.each(chord_palette, function(idx, val) {
+        var chord = val[0];
+        var display = val[1];
+        html += '<option value="'+chord+'">'+display+'</option>';
     });
 
     html += '</select>';
@@ -132,12 +119,11 @@ $(function() {
     $("#answerbutton").click(evaluate_answer);
     $("#nextseq").click(next_seq);
 
-    var possible_chords = all_possible_chords(sequences);
     var answerform_html = "<table><tr>";
 
     //assume every sequence is a 4-chord sequence for now
     for (var i=0; i<4; i++) {
-        answerform_html += chord_options(possible_chords, i);
+        answerform_html += chord_options(i);
         bottomrow += '<td align="center" class="response" id="response'+i+'"><a href="#" class="btn disabled"><i class="icon-minus"></i></a></td>\n';
     }
 
