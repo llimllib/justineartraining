@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>Lesson 1 Chords</title>
+    <title>{{ title }}</title>
     <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
     <style>
         body {
@@ -22,13 +22,12 @@
         <div class="span3">
             <div class="well sidebar-nav">
                 <ul class="nav nav-list">
-                        <li class="nav-header">Lesson 1</li>
-                            <li><a href="../../lessons/1/ssr.html">Single Chords</a></li>
-                            <li><a href="../../lessons/1/sequences.html">Chord Sequences</a></li>
-                        <li class="nav-header">Lesson 2</li>
-                            <li><a href="../../lessons/2/ssr.html">Single Chords</a></li>
-                            <li><a href="../../lessons/2/sequences.html">Chord Sequences</a></li>
-                            <li><a href="../../lessons/2/quality.html">Chord Quality</a></li>
+                    {{ #all_lessons }}
+                        <li class="nav-header">Lesson {{chapter}}</li>
+                        {{ #links }}
+                            <li><a href="{{href}}">{{title}}</a></li>
+                        {{ /links }}
+                    {{ /all_lessons }}
                 </ul>
             </div><!--/.well -->
         </div><!--/span-->
@@ -50,8 +49,8 @@
 </body>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script>
-var sound_files = [['a_chord.ogg', 'a'], ['d_chord.ogg', 'd'], ['e_chord.ogg', 'e']]
-var sounds = [['a', 'A'], ['d', 'D'], ['e', 'E']]
+var sound_files = {{ quality }}
+var sounds = {{ palette }}
 
 function evaluate_answer() {
     var user_answer = $("input[name='answer']:checked").attr("value");
@@ -88,11 +87,30 @@ function next_chord() {
     $("#asound").html(audio_html);
 }
 
+//return true if the chord_id in the sounds array
+function sound_in_sound_files(chord_id) {
+    var found = false;
+
+    $.each(sound_files, function(idx, val) {
+        if (val[1] == chord_id) {
+            found = true;
+            return false;
+        }
+    });
+
+    return found;
+}
+
 $(function() {
     $("#answerbutton").click(evaluate_answer);
     $("#nextchord").click(next_chord);
 
     $.each(sounds.reverse(), function (idx, val) {
+        //for the chord quality example, limit the options to what's in the quality array
+        if (!sound_in_sound_files(val[0])) {
+            return true;
+        }
+
         var display_name = val[1];
         var sound_id = val[0];
 

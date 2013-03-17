@@ -17,8 +17,11 @@ def build():
     if not isdir('lessons'): mkdir('lessons')
     lesson_path = path("lessons")
 
-    render_ssr = partial(render, path("templates/ssr.html").text(encoding='utf8'))
-    render_sequences = partial(render, path("templates/sequences.html").text(encoding='utf8'))
+    renderers = {
+        "ssr": partial(render, path("templates/ssr.html").text(encoding='utf8')),
+        "sequences": partial(render, path("templates/sequences.html").text(encoding='utf8')),
+        "quality": partial(render, path("templates/quality.html").text(encoding='utf8')),
+    }
 
     lessons = []
 
@@ -57,15 +60,21 @@ def build():
                 "href":  path("../..") / outdir / "sequences.html"
             })
 
+        if "quality" in manifest:
+            for soundf, _ in manifest["quality"]:
+                path(lesson_src / soundf).copy(outdir)
+
+            manifest.setdefault("links", []).append({
+                "title": "Chord Quality",
+                "href":  path("../..") / outdir / "quality.html"
+            })
+
     for manifest in lessons:
         outdir = lesson_path / manifest["chapter"]
 
         manifest["all_lessons"] = lessons
 
-        if "ssr" in manifest:
-            output = render_ssr(manifest)
-            open(outdir / "ssr.html", "w", encoding="utf8").write(output)
-
-        if "sequences" in manifest:
-            output = render_sequences(manifest)
-            open(outdir / "sequences.html", "w", encoding="utf8").write(output)
+        for pagetype in ["ssr", "sequences", "quality"]:
+            if pagetype in manifest:
+                output = renderers[pagetype](manifest)
+                open(outdir / "{}.html".format(pagetype), "w", encoding="utf8").write(output)

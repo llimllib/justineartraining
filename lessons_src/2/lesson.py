@@ -13,6 +13,8 @@
 'sequences': [["ameamdm.ogg", ["am", "e", "am", "dm"]],
               ["daame.ogg", ["d", "a", "am", "e"]],
               ["eddma.ogg", ["e", "d", "dm", "a"]]],
+'quality': [["am.ogg", "am"],
+            ["a.ogg", "a"]],
 'title' : "Lesson 2"
 }
 
