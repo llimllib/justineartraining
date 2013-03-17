@@ -15,27 +15,50 @@ def clean():
 @task("clean", default=True)
 def build():
     if not isdir('lessons'): mkdir('lessons')
-    lessons = path("lessons")
+    lesson_path = path("lessons")
 
     render_ssr = partial(render, path("templates/ssr.html").text(encoding='utf8'))
     render_sequences = partial(render, path("templates/sequences.html").text(encoding='utf8'))
 
+    lessons = []
+
+    #XXX: this assumes lessons_src will be parsed in numerical order.
+    #     need to write a sorter if that's not true
     for lesson_src in path("lessons_src").dirs():
         manifest = eval(lesson_src.files("lesson.py")[0].text())
-
         n = lesson_src.partition('/')[-1]
 
-        outdir = lessons / n
+        outdir = lesson_path / n
         outdir.mkdir()
 
+        lessons.append(manifest)
+        manifest["chapter"] = n
+
         if "sounds" in manifest:
-            output = render_ssr(manifest)
             for soundf, _, _ in manifest["sounds"]:
                 path(lesson_src / soundf).copy(outdir)
-            open((outdir / "ssr{}.html".format(n)), "w", encoding="utf8").write(output)
+
+            manifest.setdefault("links", []).append({
+                "title": "Single Chords",
+                "href":  str(path("../..") / outdir / "ssr.html")
+            })
 
         if "sequences" in manifest:
             for seqf, _ in manifest["sequences"]:
-                path(lesson_src / seqf).copy(outdir)
+                path(lesson_src / soundf).copy(outdir)
+
+            manifest.setdefault("links", []).append({
+                "title": "Chord Sequences",
+                "href":  str(path("../..") / outdir / "sequences.html")
+            })
+
+    for manifest in lessons:
+        manifest["all_lessons"] = lessons
+
+        if "sounds" in manifest:
+            output = render_ssr(manifest)
+            open((outdir / "ssr.html"), "w", encoding="utf8").write(output)
+
+        if "sequences" in manifest:
             output = render_sequences(manifest)
-            open((outdir / "sequences{}.html".format(n)), "w", encoding="utf8").write(output)
+            open((outdir / "sequences.html"), "w", encoding="utf8").write(output)
