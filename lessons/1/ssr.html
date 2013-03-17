@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+    <title>Lesson 1 Chords</title>
+    <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <style>
+        body {
+            padding-top: 15px;
+            padding-bottom: 40px;
+        }
+        select {
+            width: 50px;
+        }
+        .sidebar-nav {
+            padding: 9px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span3">
+            <div class="well sidebar-nav">
+                <ul class="nav nav-list">
+                        <li class="nav-header">Lesson 1</li>
+                            <li><a href="../../lessons/1/ssr.html">Single Chords</a></li>
+                            <li><a href="../../lessons/1/sequences.html">Chord Sequences</a></li>
+                </ul>
+            </div><!--/.well -->
+        </div><!--/span-->
+    <div class="span9">
+        <div id="quiz">
+            <div id="asound">
+            </div>
+            <div id="answers">
+                <form id="answerform">
+                    <input type="submit" name="submit" value="Answer" id="answerbutton" />
+                </form>
+            </div>
+            <div id="response">
+            </div>
+            <div id="next">
+                <a href="#" id="nextchord">Give Me a New Chord</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script>
+var sounds = [['a_chord.ogg', 'a', 'A Chord'], ['d_chord.ogg', 'd', 'D Chord'], ['e_chord.ogg', 'e', 'E Chord']]
+
+function evaluate_answer() {
+    var user_answer = $("input[name='answer']:checked").attr("value");
+    var correct_answer = $("source").attr("chord");
+
+    console.log(user_answer, correct_answer);
+
+    if (user_answer == correct_answer) {
+        $("#response").html("<p>Yup!");
+    } else {
+        $("#response").html("<p>Nope! Try again.");
+    }
+
+    return false;
+}
+
+function next_chord() {
+    //clear all radio buttons
+    $("input:radio").attr("checked", false);
+
+    //clear the answer field
+    $("#response").html("");
+
+    var random_idx = Math.floor(Math.random() * sounds.length);
+
+    var sound_and_chord = sounds[random_idx];
+    var sound_src = sound_and_chord[0];
+    var sound_id  = sound_and_chord[1];
+
+    var audio_html = '<audio id="player" controls="controls"><source chord="'+sound_id+'" src="'+sound_src+'" /></audio>';
+    console.log(audio_html);
+    $("#asound").html(audio_html);
+}
+
+$(function() {
+    $("#answerbutton").click(evaluate_answer);
+    $("#nextchord").click(next_chord);
+
+    $.each(sounds.reverse(), function (idx, val) {
+        var display_name = val[2];
+        var sound_id = val[1];
+
+        var option_html = '<label class="radio"><input type="radio" name="answer" value="'+sound_id+'">'+display_name+'</input></label>'
+
+        $("#answerform").prepend(option_html);
+    });
+
+    next_chord();
+});
+    </script>
+</html>
