@@ -78,3 +78,5 @@ def build():
             if pagetype in manifest:
                 output = renderers[pagetype](manifest)
                 open(outdir / "{}.html".format(pagetype), "w", encoding="utf8").write(output)
+
+    print "finished successfully"
