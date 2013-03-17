@@ -56,8 +56,6 @@ function evaluate_answer() {
     var user_answer = $("input[name='answer']:checked").attr("value");
     var correct_answer = $("source").attr("chord");
 
-    console.log(user_answer, correct_answer);
-
     if (user_answer == correct_answer) {
         $("#response").html('<a href="#" class="btn btn-success disabled"><i class="icon-ok"></i> Correct!</a>');
     } else {
@@ -83,7 +81,6 @@ function next_chord() {
     var sound_id  = random_sound[1];
 
     var audio_html = '<audio id="player" controls="controls"><source chord="'+sound_id+'" src="'+sound_src+'" /></audio>';
-    console.log(audio_html);
     $("#asound").html(audio_html);
 }
 
