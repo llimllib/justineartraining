@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+<head>
+    <title>Lesson 2</title>
+    <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <style>
+        body {
+            padding-top: 15px;
+            padding-bottom: 40px;
+        }
+        select {
+            width: 50px;
+        }
+        .sidebar-nav {
+            padding: 9px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span3">
+            <div class="well sidebar-nav">
+                <ul class="nav nav-list">
+                        <li class="nav-header">Lesson 1</li>
+                            <li><a href="../../lessons/1/ssr.html">Single Chords</a></li>
+                            <li><a href="../../lessons/1/sequences.html">Chord Sequences</a></li>
+                        <li class="nav-header">Lesson 2</li>
+                            <li><a href="../../lessons/2/ssr.html">Single Chords</a></li>
+                            <li><a href="../../lessons/2/sequences.html">Chord Sequences</a></li>
+                </ul>
+            </div><!--/.well -->
+        </div><!--/span-->
+    <div class="span9">
+        <div id="quiz">
+            <div id="asound">
+            </div>
+            <div id="answers">
+                <form id="answerform">
+                    <input type="submit" name="submit" value="Answer" id="answerbutton" />
+                </form>
+            </div>
+            <div id="response">
+            </div>
+            <div id="next">
+                <a href="#" id="nextchord">Give Me a New Chord</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script>
+var sound_files = [['am.ogg', 'am'], ['e.ogg', 'e'], ['dm.ogg', 'dm'], ['a.ogg', 'a'], ['d.ogg', 'd']]
+var sounds = [['a', 'A'], ['am', 'A minor'], ['d', 'D'], ['dm', 'D minor'], ['e', 'E'], ['em', 'E minor']]
+
+function evaluate_answer() {
+    var user_answer = $("input[name='answer']:checked").attr("value");
+    var correct_answer = $("source").attr("chord");
+
+    console.log(user_answer, correct_answer);
+
+    if (user_answer == correct_answer) {
+        $("#response").html("<p>Yup!");
+    } else {
+        $("#response").html("<p>Nope! Try again.");
+    }
+
+    return false;
+}
+
+function sample(lst) {
+    return lst[Math.floor(Math.random() * lst.length)];
+}
+
+function next_chord() {
+    //clear all radio buttons
+    $("input:radio").attr("checked", false);
+
+    //clear the answer field
+    $("#response").html("");
+
+    var random_sound = sample(sound_files);
+    var sound_src = random_sound[0];
+    var sound_id  = random_sound[1];
+
+    var audio_html = '<audio id="player" controls="controls"><source chord="'+sound_id+'" src="'+sound_src+'" /></audio>';
+    console.log(audio_html);
+    $("#asound").html(audio_html);
+}
+
+$(function() {
+    $("#answerbutton").click(evaluate_answer);
+    $("#nextchord").click(next_chord);
+
+    $.each(sounds.reverse(), function (idx, val) {
+        var display_name = val[1];
+        var sound_id = val[0];
+
+        var option_html = '<label class="radio"><input type="radio" name="answer" value="'+sound_id+'">'+display_name+'</input></label>'
+
+        $("#answerform").prepend(option_html);
+    });
+
+    next_chord();
+});
+    </script>
+</html>
