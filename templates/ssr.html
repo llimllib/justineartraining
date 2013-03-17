@@ -60,9 +60,9 @@ function evaluate_answer() {
     console.log(user_answer, correct_answer);
 
     if (user_answer == correct_answer) {
-        $("#response").html("Yup!");
+        $("#response").html("<p>Yup!");
     } else {
-        $("#response").html("Nope! Try again.");
+        $("#response").html("<p>Nope! Try again.");
     }
 
     return false;
@@ -94,7 +94,7 @@ $(function() {
         var display_name = val[2];
         var sound_id = val[1];
 
-        var option_html = '<input type="radio" name="answer" value="'+sound_id+'">'+display_name+'</input><br>'
+        var option_html = '<label class="radio"><input type="radio" name="answer" value="'+sound_id+'">'+display_name+'</input></label>'
 
         $("#answerform").prepend(option_html);
     });
