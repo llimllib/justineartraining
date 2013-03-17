@@ -39,31 +39,33 @@ def build():
         lessons.append(manifest)
         manifest["chapter"] = n
 
-        if "sounds" in manifest:
-            for soundf, _, _ in manifest["sounds"]:
+        if "ssr" in manifest:
+            for soundf, _ in manifest["ssr"]:
                 path(lesson_src / soundf).copy(outdir)
 
             manifest.setdefault("links", []).append({
                 "title": "Single Chords",
-                "href":  str(path("../..") / outdir / "ssr.html")
+                "href":  path("../..") / outdir / "ssr.html"
             })
 
         if "sequences" in manifest:
             for seqf, _ in manifest["sequences"]:
-                path(lesson_src / soundf).copy(outdir)
+                path(lesson_src / seqf).copy(outdir)
 
             manifest.setdefault("links", []).append({
                 "title": "Chord Sequences",
-                "href":  str(path("../..") / outdir / "sequences.html")
+                "href":  path("../..") / outdir / "sequences.html"
             })
 
     for manifest in lessons:
+        outdir = lesson_path / manifest["chapter"]
+
         manifest["all_lessons"] = lessons
 
-        if "sounds" in manifest:
+        if "ssr" in manifest:
             output = render_ssr(manifest)
-            open((outdir / "ssr.html"), "w", encoding="utf8").write(output)
+            open(outdir / "ssr.html", "w", encoding="utf8").write(output)
 
         if "sequences" in manifest:
             output = render_sequences(manifest)
-            open((outdir / "sequences.html"), "w", encoding="utf8").write(output)
+            open(outdir / "sequences.html", "w", encoding="utf8").write(output)
