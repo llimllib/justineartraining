@@ -38,12 +38,10 @@
             <div id="answers">
                 <form id="answerform">
                     <input type="submit" name="submit" value="Answer" id="answerbutton" />
+                    <input type="submit" name="newchord" value="New Chord" id="nextchord" />
                 </form>
             </div>
             <div id="response">
-            </div>
-            <div id="next">
-                <a href="#" id="nextchord">Give Me a New Chord</a>
             </div>
         </div>
     </div>
@@ -61,9 +59,9 @@ function evaluate_answer() {
     console.log(user_answer, correct_answer);
 
     if (user_answer == correct_answer) {
-        $("#response").html("<p>Yup!");
+        $("#response").html('<a href="#" class="btn btn-success disabled"><i class="icon-ok"></i> Correct!</a>');
     } else {
-        $("#response").html("<p>Nope! Try again.");
+        $("#response").html('<a href="#" class="btn btn-danger disabled"><i class="icon-remove"></i> Try Again</a>');
     }
 
     return false;
