@@ -25,7 +25,12 @@ def build():
     #XXX: this assumes lessons_src will be parsed in numerical order.
     #     need to write a sorter if that's not true
     for lesson_src in path("lessons_src").dirs():
-        manifest = eval(lesson_src.files("lesson.py")[0].text())
+        try:
+            manifest = eval(lesson_src.files("lesson.py")[0].text())
+        except:
+            print "failed to load manifest {}".format(lesson_src / "lesson.py")
+            continue
+
         n = lesson_src.partition('/')[-1]
 
         outdir = lesson_path / n
