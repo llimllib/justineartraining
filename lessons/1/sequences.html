@@ -14,6 +14,9 @@
         .sidebar-nav {
             padding: 9px 0;
         }
+        table {
+            margin-bottom: 14px;
+        }
     </style>
 </head>
 <body>
@@ -39,19 +42,17 @@
             <div id="answers">
                 <form id="answerform" action="#">
                     <input type="submit" name="submit" value="Answer" id="answerbutton" />
+                    <input type="submit" name="newchord" value="New Sequence" id="nextseq" />
                 </form>
             </div>
             <div id="response">
-            </div>
-            <div id="next">
-                <a href="#" id="nextseq">Give Me a New Chord Sequence</a>
             </div>
         </div>
     </div>
 </div>
 </body>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+    <script src="../../bootstrap/js/bootstrap.min.js"></script>
     <script>
 var sequences = [['changes_aead.ogg', ['a', 'e', 'a', 'd']], ['changes_daed.ogg', ['d', 'a', 'e', 'd']], ['changes_eaed.ogg', ['e', 'a', 'e', 'd']]]
 
@@ -65,9 +66,9 @@ function evaluate_answer() {
         var response = "";
 
         if (user_answer == correct_answer) {
-            response = '<span style="correct">&#10003;</span>';
+            response = '<a href="#" class="btn btn-success disabled"><i class="icon-ok"></i></a>';
         } else {
-            response = '<span style="incorrect">&#215;</span>';
+            response = '<a href="#" class="btn btn-danger disabled"><i class="icon-remove"></i></a>';
         }
 
         response_td.html(response);
@@ -85,15 +86,13 @@ function next_seq() {
     $("select").val("a");
 
     //clear the answer field
-    $(".response").html("")
+    $("#bottomrow").html(bottomrow)
 
     var sound_and_seq = sample(sequences);
     var sound_src = sound_and_seq[0];
-    // JSON-encode the seq so we can stick it in an attr
     var sound_seq  = sound_and_seq[1].join(",");
 
     var audio_html = '<audio id="player" controls="controls"><source sequence="'+sound_seq+'" src="'+sound_src+'" /></audio>';
-    console.log(audio_html);
     $("#asound").html(audio_html);
 }
 
@@ -126,20 +125,24 @@ function chord_options(possible_chords, n) {
     return html
 }
 
+//ugh
+var bottomrow = '';
+
 $(function() {
     $("#answerbutton").click(evaluate_answer);
     $("#nextseq").click(next_seq);
 
     var possible_chords = all_possible_chords(sequences);
     var answerform_html = "<table><tr>";
-    var bottomrow = "<tr>";
 
     //assume every sequence is a 4-chord sequence for now
     for (var i=0; i<4; i++) {
         answerform_html += chord_options(possible_chords, i);
-        bottomrow += '<td class="response" id="response'+i+'"></td>';
+        bottomrow += '<td align="center" class="response" id="response'+i+'"><a href="#" class="btn disabled"><i class="icon-minus"></i></a></td>\n';
     }
-    answerform_html += "</tr>" + bottomrow + "</tr>"
+
+    bottomrow += "</tr>";
+    answerform_html += '</tr>\n<tr id="bottomrow">\n' + bottomrow + '</tr>';
     $("#answerform").prepend(answerform_html);
 
     next_seq();
