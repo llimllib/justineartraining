@@ -25,6 +25,9 @@
                         <li class="nav-header">Lesson 1</li>
                             <li><a href="../../lessons/1/ssr.html">Single Chords</a></li>
                             <li><a href="../../lessons/1/sequences.html">Chord Sequences</a></li>
+                        <li class="nav-header">Lesson 2</li>
+                            <li><a href="../../lessons/2/ssr.html">Single Chords</a></li>
+                            <li><a href="../../lessons/2/sequences.html">Chord Sequences</a></li>
                 </ul>
             </div><!--/.well -->
         </div><!--/span-->
@@ -48,7 +51,8 @@
 </body>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script>
-var sounds = [['a_chord.ogg', 'a', 'A Chord'], ['d_chord.ogg', 'd', 'D Chord'], ['e_chord.ogg', 'e', 'E Chord']]
+var sound_files = [['a_chord.ogg', 'a'], ['d_chord.ogg', 'd'], ['e_chord.ogg', 'e']]
+var sounds = [['a', 'A'], ['d', 'D'], ['e', 'E']]
 
 function evaluate_answer() {
     var user_answer = $("input[name='answer']:checked").attr("value");
@@ -65,6 +69,10 @@ function evaluate_answer() {
     return false;
 }
 
+function sample(lst) {
+    return lst[Math.floor(Math.random() * lst.length)];
+}
+
 function next_chord() {
     //clear all radio buttons
     $("input:radio").attr("checked", false);
@@ -72,11 +80,9 @@ function next_chord() {
     //clear the answer field
     $("#response").html("");
 
-    var random_idx = Math.floor(Math.random() * sounds.length);
-
-    var sound_and_chord = sounds[random_idx];
-    var sound_src = sound_and_chord[0];
-    var sound_id  = sound_and_chord[1];
+    var random_sound = sample(sound_files);
+    var sound_src = random_sound[0];
+    var sound_id  = random_sound[1];
 
     var audio_html = '<audio id="player" controls="controls"><source chord="'+sound_id+'" src="'+sound_src+'" /></audio>';
     console.log(audio_html);
@@ -88,8 +94,8 @@ $(function() {
     $("#nextchord").click(next_chord);
 
     $.each(sounds.reverse(), function (idx, val) {
-        var display_name = val[2];
-        var sound_id = val[1];
+        var display_name = val[1];
+        var sound_id = val[0];
 
         var option_html = '<label class="radio"><input type="radio" name="answer" value="'+sound_id+'">'+display_name+'</input></label>'
 
