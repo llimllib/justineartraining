@@ -97,7 +97,7 @@ function next_seq() {
     var sound_src = sound_and_seq[0];
     var sound_seq  = sound_and_seq[1].join(",");
 
-    var audio_html = '<audio id="player" controls="controls"><source sequence="'+sound_seq+'" src="'+sound_src+'" /></audio>';
+    var audio_html = '<audio id="player" controls="controls"><source sequence="'+sound_seq+'" src="../../sounds/'+sound_src+'" /></audio>';
     $("#asound").html(audio_html);
 }
 

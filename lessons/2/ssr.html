@@ -85,7 +85,7 @@ function next_chord() {
     var sound_src = random_sound[0];
     var sound_id  = random_sound[1];
 
-    var audio_html = '<audio id="player" controls="controls"><source chord="'+sound_id+'" src="'+sound_src+'" /></audio>';
+    var audio_html = '<audio id="player" controls="controls"><source chord="'+sound_id+'" src="../../sounds/'+sound_src+'" /></audio>';
     $("#asound").html(audio_html);
 }
 
